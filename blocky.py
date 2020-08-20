@@ -2,6 +2,8 @@ from sys import exit
 import pygame
 import random
 import pygame.freetype
+from Player import *
+from Obstacle import *
 
 pygame.init()
 
@@ -19,13 +21,10 @@ PURPLE = (255, 0, 255)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-GAME_OVER = False
-# STATE = DEAD
-
 CUBE_COUNT = 60
 player_size = 20 
-enemy_size = [1.0]
 
+#Game state
 state = 0
 
 random.seed(None)
@@ -45,35 +44,15 @@ textY = 10
 
 enemy_list = []
 
-class Player:
-
-    def __init__(self ):
-        self.positionX = WIDTH / 2
-        self.positionY = HEIGHT - 2 * player_size
-        self.size = 20
-        
-
-class Obstacle(object):
-    size = .1
-    x_pos = 0
-    y_pos = 0
-    ID = 0
-    color = (255, 255, 255)
-    def __init__(self):
-        self.size = 1
-        self.x_pos = random.randint(0, WIDTH-25)
-        self.y_pos = random.randint(-800, -100)
-        self.color = (random.randint(100, 255), random.randint(100, 255), random.randint(100, 255))
-
 def show_score(x, y):
     score_text = font.render("Score: " + str(score), True, WHITE)
     screen.blit(score_text, (x, y))
 
-def make_enemy(cube_list):
+def make_enemy(cube_list, WIDTH):
 
         if len(cube_list) == 0:
             for x in range(CUBE_COUNT):
-                cube = Obstacle()
+                cube = Obstacle(WIDTH)
                 cube.ID = len(cube_list)
                 cube_list.append(cube)
             
@@ -124,10 +103,10 @@ def check_collision(player_left_side, player_top_side, block_left_side, block_to
         
        
 
-def update_list(cube_list, index):
+def update_list(cube_list, index, WIDTH):
     #index = length of list
     if len(cube_list) < CUBE_COUNT:    
-        cube = Obstacle()
+        cube = Obstacle(WIDTH)
         cube.ID = index
         cube_list.append(cube)
 
@@ -157,7 +136,7 @@ def move_enemy(cube_list, score, G_OVER):
                 cube_list.pop(x)
                 for cubes in cube_list:
                     cubes.ID -= 1
-                update_list(cube_list, len(cube_list))
+                update_list(cube_list, len(cube_list), WIDTH)
             
     return score, G_OVER
 
@@ -205,8 +184,8 @@ def run_game(state, score):
        
     screen.fill(BLACK)
 
-    make_enemy(enemy_list)
-    update_list(enemy_list, len(enemy_list))
+    make_enemy(enemy_list, WIDTH)
+    update_list(enemy_list, len(enemy_list), WIDTH)
     draw_enemies(enemy_list)
     result = move_enemy(enemy_list, score, state)
     score = result[0]   
@@ -233,6 +212,7 @@ def dead_player(state):
         rect_start = pygame.draw.rect(screen, LIGHT_GREEN, (250, HEIGHT - 250, 100, 50), 0)
         if get_click:
             state = 1
+            score = 0
     else:
         rect_start = pygame.draw.rect(screen, GREEN, (250, HEIGHT - 250, 100, 50), 0)
     screen.blit(restart_text, textRect)
@@ -251,28 +231,21 @@ def dead_player(state):
         rect_stop = pygame.draw.rect(screen, RED, (WIDTH - 350, HEIGHT - 250, 100, 50), 0)
     screen.blit(restart_text, textRect)
 
-    #
-    # keys = pygame.key.get_pressed()
-
-    # if keys[pygame.K_SPACE]:
-    #     print("Exiting...")
-    #     pygame.quit()
-    #     exit()
     pygame.display.update()
     return state
 
 #Game loop
-while GAME_OVER == False:
+while True:
 
     get_click = False
 
     for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-            get_click = True
         if event.type == pygame.QUIT:
             print("Exiting...")
             pygame.quit()
             exit()     
+        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            get_click = True
     if state == 0:
         state = start_screen(state)
     elif state == 1:
@@ -282,9 +255,9 @@ while GAME_OVER == False:
 
     elif state == 2:
         state = dead_player(state)
+
        
     clock.tick(60)   
-    print(str(state))
 
 
     
