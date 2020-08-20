@@ -58,9 +58,9 @@ def make_enemy(cube_list, WIDTH):
             
 def display_death_screen():
     screen.fill(BLACK)
-    show_score(WIDTH/2.4, HEIGHT/2)
+    show_score(WIDTH/2.37, HEIGHT/2)
     death_text = font.render("YOU DIED", True, WHITE)
-    screen.blit(death_text, (WIDTH/2.4, HEIGHT/2 - 100))
+    screen.blit(death_text, (WIDTH/2.35, HEIGHT/2 - 50))
 
 
 def end_game(G_OVER):
@@ -130,7 +130,7 @@ def move_enemy(cube_list, score, G_OVER):
 
                 # 80 = max size
                 if cube_list[x].size < 80:
-                    cube_list[x].size += ((1 * (cube_list[x].y_pos % 2)) / cube_list[x].size)
+                    cube_list[x].size += ((1 * (cube_list[x].y_pos % 2)) / cube_list[x].size) * 1.1
 
             else:
                 cube_list.pop(x)
@@ -144,7 +144,13 @@ def start_screen(state):
     mouse = pygame.mouse.get_pos()
 
     screen.fill(BLACK)
-    
+    font = pygame.font.Font('freesansbold.ttf', 64)
+    death_text = font.render("Cubefield 2D", True, WHITE)
+    screen.blit(death_text, (WIDTH/3.3, HEIGHT/2 - 100))
+
+    font = pygame.font.Font('freesansbold.ttf', 32)
+    death_text = font.render("By John Melton", True, WHITE)
+    screen.blit(death_text, (WIDTH/2.7, HEIGHT/2))
     #GREEN BUTTON
     restart_text = font.render("Start", True, WHITE)
     textRect = (250 + 12, (HEIGHT - 250)+(50/4))
@@ -177,9 +183,9 @@ def run_game(state, score):
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_LEFT] and (player_pos[0] > 0):
-        player_pos[0] -= 8
+        player_pos[0] -= 6
     if keys[pygame.K_RIGHT] and (player_pos[0] < (WIDTH - player_size)):
-        player_pos[0] += 8
+        player_pos[0] += 6
 
        
     screen.fill(BLACK)
@@ -198,7 +204,7 @@ def run_game(state, score):
         enemy_list.clear()
     return state, score
 
-def dead_player(state):
+def dead_player(state, score):
     mouse = pygame.mouse.get_pos()
 
     screen.fill(BLACK)
@@ -232,7 +238,7 @@ def dead_player(state):
     screen.blit(restart_text, textRect)
 
     pygame.display.update()
-    return state
+    return state, score
 
 #Game loop
 while True:
@@ -247,16 +253,19 @@ while True:
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             get_click = True
     if state == 0:
+        score = 0
         state = start_screen(state)
+        
     elif state == 1:
         result = run_game(state, score)
         state = result[0]
         score = result[1]
 
     elif state == 2:
-        state = dead_player(state)
-
-       
+        result = dead_player(state, score)
+        state = result[0]
+        score = result[1]
+        
     clock.tick(60)   
 
 
