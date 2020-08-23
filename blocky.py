@@ -21,7 +21,7 @@ PURPLE = (255, 0, 255)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-CUBE_COUNT = 60
+CUBE_COUNT = 80
 player_size = 20 
 
 #Game state
@@ -31,7 +31,7 @@ random.seed(None)
 
 clock = pygame.time.Clock()
 
-player_pos = [WIDTH/2, HEIGHT - 2 * player_size]
+player_pos = [WIDTH/2, HEIGHT - 4 * player_size]
 score = 0
 pygame.font.init()
 
@@ -76,29 +76,31 @@ def check_collision(player_left_side, player_top_side, block_left_side, block_to
         block_bottom_side = block_top_side + c_size
 
         #Block is to the left of the player and top of block is higher than player's top
-        if(block_left_side <= player_left_side and block_right_side >= player_left_side
-        and block_top_side <= player_top_side and block_bottom_side >= player_top_side and block_top_side <= player_bottom_side):
-            G_OVER = end_game(G_OVER)
+        if ((block_left_side <= player_left_side and block_right_side >= player_left_side
+        and block_top_side <= player_top_side and block_bottom_side >= player_top_side and block_top_side <= player_bottom_side)
+
         #Block is to the right of the player and top of block is higher than player's top
-        elif(block_left_side <= player_right_side and block_right_side >= player_right_side
-        and block_top_side >= player_top_side and block_bottom_side >= player_top_side and block_top_side <= player_bottom_side):
-            G_OVER = end_game(G_OVER)
+        or (block_left_side <= player_right_side and block_right_side >= player_right_side
+        and block_top_side >= player_top_side and block_bottom_side >= player_top_side and block_top_side <= player_bottom_side)
+
         #Block is to the left of the player and top of block is lower than player's top
-        elif(block_left_side <= player_left_side and block_right_side >= player_left_side
-        and block_top_side >= player_top_side and block_bottom_side >= player_top_side and block_top_side <= player_bottom_side):
-            G_OVER = end_game(G_OVER)
+        or (block_left_side <= player_left_side and block_right_side >= player_left_side
+        and block_top_side >= player_top_side and block_bottom_side >= player_top_side and block_top_side <= player_bottom_side)
+
         #Block is to the right of the player and top of block is lower than player's top
-        elif(block_left_side <= player_right_side and block_right_side >= player_right_side
-        and block_top_side <= player_top_side and block_bottom_side >= player_top_side and block_top_side <= player_bottom_side):
-            G_OVER = end_game(G_OVER)
+        or (block_left_side <= player_right_side and block_right_side >= player_right_side
+        and block_top_side <= player_top_side and block_bottom_side >= player_top_side and block_top_side <= player_bottom_side)
+
         #BLOCK IN PLAYER
-        elif(block_left_side >= player_left_side and block_right_side <= player_right_side
-        and block_top_side >= player_top_side and block_bottom_side >= player_top_side and block_top_side <= player_bottom_side):
-            G_OVER = end_game(G_OVER)
+        or (block_left_side >= player_left_side and block_right_side <= player_right_side
+        and block_top_side >= player_top_side and block_bottom_side >= player_top_side and block_top_side <= player_bottom_side)
+
         #BLOCK IN PLAYER
-        elif(block_left_side >= player_left_side and block_right_side <= player_right_side
-        and block_top_side >= player_top_side and block_bottom_side >= player_top_side and block_top_side <= player_bottom_side):
+        or (block_left_side >= player_left_side and block_right_side <= player_right_side
+        and block_top_side >= player_top_side and block_bottom_side >= player_top_side and block_top_side <= player_bottom_side)):
+
             G_OVER = end_game(G_OVER)
+            
         return G_OVER
         
        
@@ -126,11 +128,16 @@ def move_enemy(cube_list, score, G_OVER):
                 score += 1
 
             if cube_list[x].y_pos < HEIGHT:
-                cube_list[x].y_pos += 5
 
-                # 80 = max size
-                if cube_list[x].size < 80:
-                    cube_list[x].size += ((1 * (cube_list[x].y_pos % 2)) / cube_list[x].size) * 1.1
+                if(cube_list[x].y_pos < HEIGHT / 2):
+                    cube_list[x].size = 1
+                    cube_list[x].y_pos += 5 
+                
+                else:
+                    cube_list[x].y_pos += 5 * (cube_list[x].size * .1) # acceleration
+
+                    if cube_list[x].size < 80:
+                        cube_list[x].size += (cube_list[x].size) * .03 # = scaling factor
 
             else:
                 cube_list.pop(x)
@@ -189,16 +196,19 @@ def run_game(state, score):
 
        
     screen.fill(BLACK)
-
+    #Move the enemies
     make_enemy(enemy_list, WIDTH)
     update_list(enemy_list, len(enemy_list), WIDTH)
     draw_enemies(enemy_list)
     result = move_enemy(enemy_list, score, state)
+
     score = result[0]   
     state = result[1]
-    show_score(textX, textY)
 
     pygame.draw.rect(screen, WHITE, (player_pos[0], player_pos[1], player_size, player_size), 0)
+    pygame.draw.rect(screen, BLACK, (0, 0, WIDTH, HEIGHT / 2), 0)
+    show_score(textX, textY)
+
     pygame.display.update()
     if state == 2:
         enemy_list.clear()
@@ -252,19 +262,21 @@ while True:
             exit()     
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             get_click = True
+
+    #Start Menu
     if state == 0:
         score = 0
         state = start_screen(state)
-        
+    #Game 
     elif state == 1:
         result = run_game(state, score)
         state = result[0]
         score = result[1]
-
+    #Death Menu
     elif state == 2:
         result = dead_player(state, score)
         state = result[0]
-        score = result[1]
+        score = result[1] 
         
     clock.tick(60)   
 
