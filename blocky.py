@@ -128,10 +128,8 @@ def move_enemy(cube_list, score):
                 cube_list[x].y_pos += 5 
             
             else:
-                cube_list[x].y_pos += 5 * (cube_list[x].size * .1) # acceleration
-
-                if cube_list[x].size < 80:
-                    cube_list[x].size += (cube_list[x].size) * .03 # = scaling factor
+                cube_list[x].y_pos += 5 * (cube_list[x].size * .1) # acceleration of cuber
+                cube_list[x].size += (cube_list[x].size) * .03 # = scaling cubes
 
         else:
             cube_list.pop(x)
