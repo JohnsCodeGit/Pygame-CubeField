@@ -153,11 +153,11 @@ def start_screen(clicked, enter):
     text_rect = (250 + 12, (HEIGHT - 250) + (50 / 4))
 
     if (250 + 100) > mouse[0] > 250 and (HEIGHT - 250 + 50) > mouse[1] > (HEIGHT - 250):
-        rect_start = pygame.draw.rect(screen, LIGHT_GREEN, (250, HEIGHT - 250, 100, 50), 0)
+        pygame.draw.rect(screen, LIGHT_GREEN, (250, HEIGHT - 250, 100, 50), 0)
         if clicked:
             sta = 1
     else:
-        rect_start = pygame.draw.rect(screen, GREEN, (250, HEIGHT - 250, 100, 50), 0)
+        pygame.draw.rect(screen, GREEN, (250, HEIGHT - 250, 100, 50), 0)
     screen.blit(restart_text, text_rect)
 
     # RED BUTTON
@@ -165,12 +165,12 @@ def start_screen(clicked, enter):
     text_rect = (WIDTH - 350 + 15, (HEIGHT - 250) + (50 / 4))
 
     if (WIDTH - 350 + 100) > mouse[0] > (WIDTH - 350) and (HEIGHT - 250 + 50) > mouse[1] > (HEIGHT - 250):
-        rect_stop = pygame.draw.rect(screen, LIGHT_RED, (WIDTH - 350, HEIGHT - 250, 100, 50), 0)
+        pygame.draw.rect(screen, LIGHT_RED, (WIDTH - 350, HEIGHT - 250, 100, 50), 0)
         if clicked:
             pygame.quit()
             exit()
     else:
-        rect_stop = pygame.draw.rect(screen, RED, (WIDTH - 350, HEIGHT - 250, 100, 50), 0)
+        pygame.draw.rect(screen, RED, (WIDTH - 350, HEIGHT - 250, 100, 50), 0)
     screen.blit(restart_text, text_rect)
 
     pygame.display.update()
@@ -221,12 +221,12 @@ def dead_player(scr, clicked, enter):
     text_rect = (250 + 12, (HEIGHT - 250) + (50 / 4))
 
     if (250 + 100) > mouse[0] > 250 and (HEIGHT - 250 + 50) > mouse[1] > (HEIGHT - 250):
-        rect_start = pygame.draw.rect(screen, LIGHT_GREEN, (250, HEIGHT - 250, 100, 50), 0)
+        pygame.draw.rect(screen, LIGHT_GREEN, (250, HEIGHT - 250, 100, 50), 0)
         if clicked:
             sta = 1
             scr = 0
     else:
-        rect_start = pygame.draw.rect(screen, GREEN, (250, HEIGHT - 250, 100, 50), 0)
+        pygame.draw.rect(screen, GREEN, (250, HEIGHT - 250, 100, 50), 0)
     screen.blit(restart_text, text_rect)
 
     # RED BUTTON
@@ -234,13 +234,13 @@ def dead_player(scr, clicked, enter):
     text_rect = (WIDTH - 350 + 15, (HEIGHT - 250) + (50 / 4))
 
     if (WIDTH - 350 + 100) > mouse[0] > (WIDTH - 350) and (HEIGHT - 250 + 50) > mouse[1] > (HEIGHT - 250):
-        rect_stop = pygame.draw.rect(screen, LIGHT_RED, (WIDTH - 350, HEIGHT - 250, 100, 50), 0)
+        pygame.draw.rect(screen, LIGHT_RED, (WIDTH - 350, HEIGHT - 250, 100, 50), 0)
         # get_click = pygame.mouse.get_pressed()
         if clicked:
             pygame.quit()
             exit()
     else:
-        rect_stop = pygame.draw.rect(screen, RED, (WIDTH - 350, HEIGHT - 250, 100, 50), 0)
+        pygame.draw.rect(screen, RED, (WIDTH - 350, HEIGHT - 250, 100, 50), 0)
     screen.blit(restart_text, text_rect)
 
     pygame.display.update()
