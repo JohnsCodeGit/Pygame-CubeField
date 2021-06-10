@@ -27,6 +27,39 @@ BLACK = (0, 0, 0)
 CUBE_COUNT = 85
 player_size = 20
 
+
+""""
+import pygame
+
+pygame.init()
+
+clock = pygame.time.Clock()
+screen = pygame.display.set_mode((700,500))
+
+player = pygame.Rect(100, 300, 100, 100)
+
+enemy  = pygame.Rect(400, 300, 100, 100)
+while True:
+  keys = pygame.key.get_pressed()
+  screen.fill((30,30,30))
+  for event in pygame.event.get():
+    if event.type == pygame.QUIT:
+      pygame.quit()
+      
+  if keys[pygame.K_LEFT] and (player.x > 0):
+        player.x -= 6
+  if keys[pygame.K_RIGHT] and (player.x < (700 - 100)):
+      player.x += 6
+
+  if player.colliderect(enemy):
+    print("shit")
+    
+  pygame.draw.rect(screen, (255,0,0), player)
+  pygame.draw.rect(screen, (0,255,0), enemy)
+  pygame.display.flip()
+  clock.tick(60)
+""""
+
 # Game state
 state = 0
 score = 0
